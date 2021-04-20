@@ -8,7 +8,7 @@ from xgboost import XGBClassifier
 from a2ml.api.a2ml import A2ML, Context
 from helper import build_model, deploy_monitored_model
 
-days = 5 #38
+days = 20 #38
 day_size = 9500
 
 target = "Response"
