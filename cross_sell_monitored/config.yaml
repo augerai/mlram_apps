@@ -1,0 +1,85 @@
+# Overall project name
+name: cross_sell
+debug: true
+# List of providers: auger, azure, google(not supported yet)
+providers: external
+# Use Auger Cloud Use Auger Cloud for all providers
+use_auger_cloud: true
+# Local file name or remote url to the data source file
+source: train.csv
+# List of columns to be excluded from the training data
+exclude:
+# Target column name
+target: Response
+# Model type: classification|regression|timeseries
+model_type: classification
+binary_classification: true
+
+# Experiment settings
+experiment:
+  ### Metric used to build Model
+  # Score used to optimize ML model.
+  # Supported scores for classification: accuracy, precision_weighted, AUC_weighted, norm_macro_recall, average_precision_score_weighted
+  # Auger only: Supported scores for classification:  f1_macro, f1_micro, f1_weighted, neg_log_loss, precision_macro, precision_micro, recall_macro, recall_micro, recall_weighted   
+  # Auger only: Supported scores for binary classification: average_precision, f1, f1_macro, f1_micro, f1_weighted, neg_log_loss, precision, precision_macro, precision_micro, recall, recall_macro, recall_micro, recall_weighted, roc_auc, cohen_kappa_score, matthews_corrcoef
+
+  # Supported scores for regression and time series: spearman_correlation, r2, normalized_mean_absolute_error, normalized_root_mean_squared_error
+  # Auger only: Supported scores for regression and time series: explained_variance, neg_median_absolute_error, neg_mean_absolute_error, neg_mean_squared_error, neg_mean_squared_log_error, neg_rmsle, neg_mase, mda, neg_rmse
+  metric: precision
+
+  # Number of folds used for k-folds validation of individual trial
+  cross_validation_folds: 5
+
+  # Size in percent(0.0-1.0): to hold out a portion of the training data for validation
+  #validation_size: 0.2
+
+  # Maximum time to run experiment in minutes
+  max_total_time: 60
+  # Maximum time to run individual trial in minutes
+  max_eval_time: 5
+  # Maximum trials to run to complete experiment
+  max_n_trials: 10
+  # Try to improve model performance by creating ensembles from the trial models
+  use_ensemble: true
+
+  # The experiment terminates after this score is reached
+  #exit_score: 0.7
+
+  # The maximum number of threads to use for a given training trial
+  #max_cores_per_trial: 4
+  # Represents the maximum number of trials that would be executed in parallel on one node  
+  #max_concurrent_trials: 4
+
+  # Path to validation dataset
+  #validation_data:
+
+review:
+  roi:
+    # Filter syntax - see Pandas.DataFrame.query method: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#indexing-query
+    filter: P==1
+    # Revenue can contain formuala for calculating revenue based on fields from actual. See ROI language for the syntax
+    revenue: "if(A=True,1200, 0)"
+    # Investment can contain formuala for calculating investment based on fields from actual. See ROI language for the syntax  
+    investment: 1000
+  
+  alert:
+    # Activate/Deactivate Review Alert
+    active: true
+    #model_accuracy - Decrease in Model Accuracy: the model accuracy threshold allowed before trigger is initiated. Default threshold: 0.7. Default sensitivity: 72
+    #feature_average_range - Feature Average Out-Of-Range: Trigger an alert if average feature value during time period goes beyond the standard deviation range calculated during training period by the specified number of times or more. Default threshold: 1. Default sensitivity: 168
+    #runtime_errors_burst - Burst Of Runtime Errors: Trigger an alert if runtime error count exceeds threshold. Default threshold: 5. Default sensitivity: 1
+    type: model_accuracy
+    threshold: 0.5
+    #The amount of time(in hours) this metric must be at or below the threshold to trigger the alert.
+    sensitivity: 72
+    #no - no action should be executed
+    #retrain - Use new predictions and actuals as test set to retrain the model.
+    #retrain_deploy - Deploy retrained model and make it active model of this endpoint.
+    action: retrain_deploy
+    #Send message via selected notification channel.
+    #no, user, organization
+    notification: user
+
+    # Should prediction be called for each historical model or just latest one(default)
+    support_model_history: false
+

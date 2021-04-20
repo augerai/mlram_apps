@@ -1,0 +1,73 @@
+# Name of the DataSet on Auger Cloud
+dataset: train.csv
+# Experiment settings that are unique to Auger
+experiment:
+  # Latest experiment name
+  name: train.csv-experiment
+  # Latest experiment session
+  experiment_session_id: 00b3a803f0440db8
+  # Time series feature. If Data Source contains more then one DATETIME feature
+  # you will have to explicitly specify feature to use as time series
+  time_series:
+  # List of columns which should be used as label encoded features
+  label_encoded: []
+
+  # List of all supported model names:
+  # *Classification: XGBClassifier,LGBMClassifier,SVC,SGDClassifier,
+  # AdaBoostClassifier,DecisionTreeClassifier,ExtraTreesClassifier,RandomForestClassifier,
+  # GradientBoostingClassifier,CatBoostClassifier
+  # *Regression: SVR,XGBRegressor,LGBMRegressor,ElasticNet,
+  # SGDRegressor,AdaBoostRegressor,DecisionTreeRegressor,ExtraTreesRegressor,
+  # RandomForestRegressor,GradientBoostingRegressor,CatBoostRegressor
+  # *Timeseries: SVR,XGBRegressor,LGBMRegressor,ElasticNet,
+  # SGDRegressor,AdaBoostRegressor,DecisionTreeRegressor,ExtraTreesRegressor,
+  # RandomForestRegressor,GradientBoostingRegressor,CatBoostRegressor,
+  # TimeSeriesLSTM,VARXBaseRegressor,DeepTimeSeriesRegressor
+
+  # A list of model names to ignore for an experiment  
+  #blocked_models:  
+
+  # A list of model names to search for an experiment. 
+  # If not specified, then all models supported for the task are used minus any specified in blocked_models
+  #allowed_models:
+
+  # Optional. Default: False. 
+  # Estimate Trial Time Predict the training time of each individual model to avoid timeouts.
+  #estimate_trial_time: False
+
+  # Optional. Default: None. Use it if you have a lot of failed trials
+  # Set it to value < 8 to give trial fit process more memory.  
+  # trials_per_worker: 2
+
+  # Optional. Default: None. Used in case of unbalanced datasets.
+  # Class Weight Weights associated with classes. If None, all classes are supposed to have weight one. 
+  # The Balanced mode automatically adjusts weights inversely proportional to class frequencies in the input data. 
+  # The Balanced Subsample mode is the same as Balanced except that weights are computed based on the bootstrap sample for every tree grown.
+  # class_weight: balanced
+
+  # Oversampling Methods to adjust the class distribution of a data set 
+  # (in binary classification if 1-class is 99% and 0-class is 1% then samples from 0-class should be added to dataset in order to prevent overfitting on majority class)
+  # Name should be from imbalanced-learn library. For example: SMOTE, RandomOverSampler, ADASYN, SMOTEENN, SMOTETomek
+  # Read https://imbalanced-learn.readthedocs.io/en/stable/api.html#module-imblearn.over_sampling
+  # For full parameters description  
+  # oversampling:
+    # name: SMOTE
+    # params:
+    #   sampling_strategy: minority
+    #   k_neighbors: 5
+
+  # Split to folds parameters:
+  # Shuffle records in each fold
+  #shuffle: True
+  # Use TimeSeriesSplit for folds generation. Will not change records order on the training data
+  #timeseries_fold_split: False
+  # Validation data split ratio, used when split to test/validation datasets. If set, cross_validation_folds will be ignored
+  #validation_size: 0.8
+
+# CPU cluster hardware settings
+cluster:
+  # Type could be standard or high_memory
+  type: standard
+  min_nodes: 2
+  max_nodes: 2
+  stack_version: stable
