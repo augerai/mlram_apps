@@ -7,6 +7,7 @@ import statistics
 import joblib
 
 from a2ml.api.a2ml import A2ML, Context
+from a2ml.api.a2ml_model import A2MLModel
 
 target = "Response"
 
@@ -27,7 +28,7 @@ def split_to_train_test():
     df_train.to_csv('../files/cross_sell_train.csv.gz', index=False, encoding='utf-8', compression='gzip')
     df_test.to_csv('../files/cross_sell_test.csv.gz', index=False, encoding='utf-8', compression='gzip')
 
-def build_model(train_path, df_data=None):
+def build_model(train_path, model_name='cross_sell_xgboost', df_data=None):
     df = pd.read_csv(train_path)
     if df_data is not None:
         df.append(df_data)
@@ -67,9 +68,9 @@ def build_model(train_path, df_data=None):
 
     model.fit(X_train, y_train)
 
-    joblib.dump(model, "../models/cross_sell_xgboost.pkl")
+    joblib.dump(model, "../models/%s.pkl"%model_name)
 
-    return "XGBClassifier", score
+    return "XGBClassifier", score, model
 
 def deploy_monitored_model(name, algorithm, score):
     ctx = Context()
@@ -77,3 +78,8 @@ def deploy_monitored_model(name, algorithm, score):
 
     return a2ml.deploy(model_id=None, name=name, algorithm=algorithm, score=score)
 
+def undeploy_monitored_model(model_id):
+    ctx = Context()
+    a2ml_model = A2MLModel(ctx)
+
+    return a2ml_model.undeploy(model_id=model_id)
